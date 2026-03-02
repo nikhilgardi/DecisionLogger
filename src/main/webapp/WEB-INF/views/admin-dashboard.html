@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout :: layout (~{::body})">
+
+<body>
+
+<div th:fragment="content">
+
+    <h3>Admin Dashboard</h3>
+
+    <h5 class="mt-4">User List</h5>
+
+    <table class="table table-bordered">
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.fullName}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.role}"></td>
+            <td th:text="${user.active}"></td>
+
+            <td>
+                <form th:action="@{/admin/deactivate}"
+                      method="post">
+
+                    <input type="hidden"
+                           name="userId"
+                           th:value="${user.id}">
+
+                    <button class="btn btn-danger btn-sm">
+                        Deactivate
+                    </button>
+
+                </form>
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

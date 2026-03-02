@@ -1,62 +1,119 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
- http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
- <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
- <groupId>com.nikhitech</groupId>
- <artifactId>decision-logger</artifactId>
- <version>1.0.0</version>
- <packaging>war</packaging>
+	<groupId>com.nikhitech</groupId>
+	<artifactId>decision-logger</artifactId>
+	<version>1.0.0</version>
+	<packaging>war</packaging>
 
- <name>Decision Logger</name>
- <description>Spring MVC + Thymeleaf Demo</description>
+	<name>Decision Logger</name>
+	<description>Spring MVC + Thymeleaf + JDBC Demo</description>
 
- <properties>
-     <java.version>1.8</java.version>
-     <spring.version>5.3.30</spring.version>
-     <thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
- </properties>
+	<!-- ==========================
+         Project Properties
+         ========================== -->
+	<properties>
+		<java.version>1.8</java.version>
+		<spring.version>5.3.30</spring.version>
+		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
+		<!-- You can add database driver version here if needed -->
+		<dbcp.version>2.12.0</dbcp.version>
+	</properties>
 
- <dependencies>
+	<dependencies>
 
-     <!-- Spring MVC -->
-     <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-webmvc</artifactId>
-         <version>${spring.version}</version>
-     </dependency>
+		<!-- ==========================
+             Spring MVC Web framework
+             Provides DispatcherServlet, Controllers, etc.
+             ========================== -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 
-     <!-- Thymeleaf -->
-     <dependency>
-         <groupId>org.thymeleaf</groupId>
-         <artifactId>thymeleaf-spring5</artifactId>
-         <version>${thymeleaf.version}</version>
-     </dependency>
+		<!-- ==========================
+             Spring JDBC
+             Provides JdbcTemplate and database support
+             ========================== -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 
-     <!-- Servlet API -->
-     <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>javax.servlet-api</artifactId>
-         <version>4.0.1</version>
-         <scope>provided</scope>
-     </dependency>
+		<!-- ==========================
+             Thymeleaf Template Engine
+             Used for rendering views
+             ========================== -->
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf-spring5</artifactId>
+			<version>${thymeleaf.version}</version>
+		</dependency>
 
- </dependencies>
+		<!-- ==========================
+             Servlet API
+             Provided by Tomcat or other servlet container
+             ========================== -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
 
- <build>
-     <finalName>decision-logger</finalName>
-     <plugins>
-         <plugin>
-             <artifactId>maven-compiler-plugin</artifactId>
-             <version>3.8.1</version>
-             <configuration>
-                 <source>1.8</source>
-                 <target>1.8</target>
-             </configuration>
-         </plugin>
-     </plugins>
- </build>
+		<!-- ==========================
+             Connection Pool (Recommended for JDBC)
+             ========================== -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>${dbcp.version}</version>
+		</dependency>
+
+		<!-- ==========================
+            Database Driver (PostgreSQL example)
+             Uncomment and add version when using a database
+             ========================== -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+		<finalName>decision-logger</finalName>
+		<plugins>
+
+			<!-- ==========================
+                 Compiler Plugin
+                 ========================== -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<!-- Optional: WAR Plugin if needed -->
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
 
 </project>

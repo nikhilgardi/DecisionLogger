@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+===============================================================
+SIDEBAR FRAGMENT
+===============================================================
+
+LAYER:
+- View Layer
+
+PURPOSE:
+- Dynamic navigation based on role.
+
+HOW?
+- Reads session attribute: user
+- Thymeleaf conditional rendering
+
+DESIGN PATTERN:
+- Fragment Pattern (Thymeleaf)
+- Template Engine Pattern
+
+-->
+
+<div th:fragment="sidebar">
+
+    <h4 class="text-white p-3">Decision Logger</h4>
+
+    <ul class="nav flex-column px-2">
+
+        <!-- Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link text-white"
+               th:href="@{/}">
+                Dashboard
+            </a>
+        </li>
+
+        <!-- Decision Menu (Visible to USER & ADMIN) -->
+        <li class="nav-item"
+            th:if="${session.user != null}">
+            <a class="nav-link text-white"
+               th:href="@{/decision/dashboard}">
+                Decisions
+            </a>
+        </li>
+
+        <!-- User Management (Visible ONLY to ADMIN) -->
+        <li class="nav-item"
+            th:if="${session.user != null and session.user.role.name() == 'ADMIN'}">
+
+            <a class="nav-link text-white"
+               th:href="@{/admin/dashboard}">
+                Users
+            </a>
+        </li>
+
+        <!-- Logout -->
+        <li class="nav-item mt-4">
+            <a class="nav-link text-danger"
+               th:href="@{/auth/logout}">
+                Logout
+            </a>
+        </li>
+
+    </ul>
+
+</div>
+
+</body>
+</html>
