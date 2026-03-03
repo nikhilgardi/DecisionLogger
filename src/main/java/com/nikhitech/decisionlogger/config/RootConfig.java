@@ -37,7 +37,13 @@ import javax.sql.DataSource;
  */
 
 @Configuration
-@ComponentScan(basePackages = "com.nikhitech.decisionlogger")
+@ComponentScan(
+    basePackages = "com.nikhitech.decisionlogger",
+    excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ANNOTATION,
+        classes = org.springframework.stereotype.Controller.class
+    )
+)
 public class RootConfig {
 
     /*
