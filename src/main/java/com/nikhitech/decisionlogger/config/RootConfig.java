@@ -1,10 +1,16 @@
 package com.nikhitech.decisionlogger.config;
 
-import org.springframework.context.annotation.*;
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
-import javax.sql.DataSource;
 
 /*
  * ===============================================================
@@ -44,7 +50,25 @@ import javax.sql.DataSource;
         classes = org.springframework.stereotype.Controller.class
     )
 )
+@PropertySource("classpath:application.properties")
 public class RootConfig {
+	
+	private final Environment env;
+	
+	 /*
+     * Environment object gives access to property values
+     */
+    public RootConfig(Environment env) {
+        this.env = env;
+    }
+    
+    /*
+     * Required to resolve ${...} placeholders
+     */
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfig() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     /*
      * DataSource Bean
@@ -57,10 +81,10 @@ public class RootConfig {
         DriverManagerDataSource dataSource =
                 new DriverManagerDataSource();
 
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/decisiondb");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("password");
+        dataSource.setDriverClassName(env.getProperty("db.driver"));
+        dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setPassword(env.getProperty("db.password"));
 
         return dataSource;
     }

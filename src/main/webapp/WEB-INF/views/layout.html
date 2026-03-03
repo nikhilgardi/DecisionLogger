@@ -1,46 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(content)">
+
 <head>
-
-    <!--
-    ===============================================================
-    GLOBAL LAYOUT TEMPLATE
-    ===============================================================
-
-    PURPOSE:
-    - Base template for all pages.
-    - Avoid duplicate header/footer/sidebar code.
-
-    DESIGN PATTERN:
-    - Template Layout Pattern
-
-    WHY?
-    - Reusable structure.
-    - DRY principle.
-
-    -->
-
     <meta charset="UTF-8">
-    <title th:replace="${title}">Decision Logger</title>
+    <title>Decision Logger</title>
 
-    <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
           rel="stylesheet">
-
 </head>
+
 <body>
 
 <div class="container-fluid">
     <div class="row">
 
-        <!-- Sidebar fragment injected -->
-        <div class="col-md-2 bg-dark text-white min-vh-100"
-             th:replace="fragments/sidebar :: sidebar">
+        <!-- SIDEBAR COLUMN -->
+        <div class="col-md-2 bg-dark text-white vh-100 p-0">
+            <div th:replace="fragments/sidebar :: sidebar"></div>
         </div>
 
-        <!-- Main content area -->
-        <div class="col-md-10 p-4"
-             th:replace="${content}">
+        <!-- MAIN CONTENT COLUMN -->
+        <div class="col-md-10 p-4">
+            <div th:replace="${content}"></div>
         </div>
 
     </div>
