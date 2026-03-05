@@ -1,59 +1,79 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout :: layout (~{::body})">
+	th:replace="layout :: layout (~{::body})">
 
 <body>
 
-<div th:fragment="content">
+	<div th:fragment="content">
 
-    <h3>Admin Dashboard</h3>
+		<h3>Admin Dashboard</h3>
 
-    <h5 class="mt-4">User List</h5>
+		<h5 class="mt-4">User List</h5>
 
-    <table class="table table-bordered">
+		<table id="userTable" class="table table-bordered table-striped">
 
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-        </thead>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Role</th>
+					<th>Status</th>
+					<th>Action</th>
+				</tr>
+			</thead>
 
-        <tbody>
+			<tbody>
 
-        <tr th:each="user : ${users}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.fullName}"></td>
-            <td th:text="${user.email}"></td>
-            <td th:text="${user.role}"></td>
-            <td th:text="${user.active}"></td>
+				<!-- Loop users normally -->
+				<tr th:each="user : ${users}">
 
-            <td>
-                <form th:action="@{/admin/deactivate}"
-                      method="post">
+					<td th:text="${user.id}"></td>
+					<td th:text="${user.fullName}"></td>
+					<td th:text="${user.email}"></td>
+					<td th:text="${user.role}"></td>
+					<td th:text="${user.active}"></td>
 
-                    <input type="hidden"
-                           name="userId"
-                           th:value="${user.id}">
+					<td>
 
-                    <button class="btn btn-danger btn-sm">
-                        Deactivate
-                    </button>
+						<form th:action="@{/admin/deactivate}" method="post">
 
-                </form>
-            </td>
+							<input type="hidden" name="userId" th:value="${user.id}">
 
-        </tr>
+							<button class="btn btn-danger btn-sm">Deactivate</button>
 
-        </tbody>
+						</form>
 
-    </table>
+					</td>
 
-</div>
+				</tr>
+
+			</tbody>
+
+		</table>
+
+	</div>
+
+
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+	<!-- DataTables -->
+	<script
+		src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+	<script>
+		$(document).ready(function() {
+
+			$('#userTable').DataTable({
+				pageLength : 5,
+				language : {
+					emptyTable : "No users found"
+				}
+			});
+
+		});
+	</script>
 
 </body>
 </html>

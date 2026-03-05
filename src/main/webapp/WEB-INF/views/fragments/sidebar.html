@@ -4,29 +4,25 @@
 
     <ul class="nav nav-pills flex-column mt-4">
 
-        <li class="nav-item mb-2">
-            <a class="nav-link text-white"
-               th:href="@{/}">
-                Dashboard
-            </a>
-        </li>
-
+        <!-- ADMIN MENU -->
         <li class="nav-item mb-2"
-            th:if="${session.user != null}">
-            <a class="nav-link text-white"
-               th:href="@{/decision/dashboard}">
-                Decisions
-            </a>
-        </li>
-
-        <li class="nav-item mb-2"
-            th:if="${session.user != null and session.user.role.name() == 'ADMIN'}">
+            th:if="${session.user.role == T(com.nikhitech.decisionlogger.model.Role).ADMIN}">
             <a class="nav-link text-white"
                th:href="@{/admin/dashboard}">
                 Users
             </a>
         </li>
 
+        <!-- USER MENU -->
+        <li class="nav-item mb-2"
+            th:if="${session.user.role == T(com.nikhitech.decisionlogger.model.Role).USER}">
+            <a class="nav-link text-white"
+               th:href="@{/decision/dashboard}">
+                Decisions
+            </a>
+        </li>
+
+        <!-- Logout -->
         <li class="nav-item mt-4">
             <a class="nav-link text-danger"
                th:href="@{/auth/logout}">

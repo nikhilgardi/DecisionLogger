@@ -1,12 +1,18 @@
 package com.nikhitech.decisionlogger.config;
 
-import com.nikhitech.decisionlogger.security.RBACInterceptor;
-import org.springframework.context.annotation.*;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import com.nikhitech.decisionlogger.security.RBACInterceptor;
 
 @Configuration
 @EnableWebMvc
@@ -19,7 +25,11 @@ public class WebConfig implements WebMvcConfigurer {
         this.rbacInterceptor = rbacInterceptor;
     }
 
-    // 🔥 Thymeleaf Template Resolver
+    /*
+    ==========================================================
+    THYMELEAF TEMPLATE RESOLVER
+    ==========================================================
+    */
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
 
@@ -35,7 +45,11 @@ public class WebConfig implements WebMvcConfigurer {
         return resolver;
     }
 
-    // 🔥 Template Engine
+    /*
+    ==========================================================
+    TEMPLATE ENGINE
+    ==========================================================
+    */
     @Bean
     public SpringTemplateEngine templateEngine() {
 
@@ -47,7 +61,11 @@ public class WebConfig implements WebMvcConfigurer {
         return engine;
     }
 
-    // 🔥 View Resolver
+    /*
+    ==========================================================
+    VIEW RESOLVER
+    ==========================================================
+    */
     @Bean
     public ViewResolver viewResolver() {
 
@@ -60,10 +78,29 @@ public class WebConfig implements WebMvcConfigurer {
         return resolver;
     }
 
+    /*
+    ==========================================================
+    RBAC INTERCEPTOR
+    ==========================================================
+    */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
         registry.addInterceptor(rbacInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/auth/**", "/css/**", "/js/**");
+                .excludePathPatterns("/auth/**", "/static/**");
+    }
+
+    /*
+    ==========================================================
+    STATIC RESOURCE HANDLER
+    ==========================================================
+    */
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("/static/");
     }
 }

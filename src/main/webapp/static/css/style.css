@@ -1,0 +1,6 @@
+
+/* Fix empty table border */
+table.dataTable tbody td.dataTables_empty {
+    text-align: center;
+    border-top: 1px solid #dee2e6;
+}
