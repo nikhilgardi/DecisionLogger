@@ -1,45 +1,100 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:fragment="layout(content)">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Decision Logger</title>
 
-   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<meta charset="UTF-8">
+<title>Decision Logger</title>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ================= CSS ================= -->
 
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-  <!--  <link rel="stylesheet"
-href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
- <link rel="stylesheet" th:href="@{/static/css/style.css}"> -->
+<!-- Bootstrap -->
+<link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
+
+<!-- FontAwesome -->
+<link rel="stylesheet" th:href="@{/static/css/all.min.css}">
+
+<!-- AdminLTE -->
+<link rel="stylesheet" th:href="@{/static/css/adminlte.min.css}">
+
+<!-- DataTables -->
+<link rel="stylesheet"
+	th:href="@{/static/css/dataTables.bootstrap4.min.css}">
+
 </head>
 
-<body>
 
-<div class="container-fluid">
-    <div class="row">
+<body class="hold-transition sidebar-mini">
 
-        <!-- SIDEBAR COLUMN -->
-        <div class="col-md-2 bg-dark text-white vh-100 p-0">
-            <div th:replace="fragments/sidebar :: sidebar"></div>
-        </div>
+	<div class="wrapper">
 
-        <!-- MAIN CONTENT COLUMN -->
-        <div class="col-md-10 p-4">
-            <div th:replace="${content}"></div>
-        </div>
+		<!-- ================= NAVBAR ================= -->
 
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+		<nav
+			class="main-header navbar navbar-expand navbar-white navbar-light">
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+			<ul class="navbar-nav">
 
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+				<li class="nav-item"><a class="nav-link" data-widget="pushmenu"
+					href="#" role="button"> <i class="fas fa-bars"></i>
 
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> -->
+				</a></li>
+
+			</ul>
+
+		</nav>
+
+
+		<!-- ================= SIDEBAR ================= -->
+
+		<aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+			<a class="brand-link text-center"> <span
+				class="brand-text font-weight-light"> Decision Logger </span>
+
+			</a>
+
+			<div class="sidebar">
+
+				<div th:replace="fragments/sidebar :: sidebar"></div>
+
+			</div>
+
+		</aside>
+
+
+		<!-- ================= PAGE CONTENT ================= -->
+
+		<div class="content-wrapper">
+
+			<section class="content p-4">
+
+				<div th:replace="${content}"></div>
+
+			</section>
+
+		</div>
+
+
+	</div>
+
+
+	<!-- ================= JS ================= -->
+
+	<!-- jQuery (must load FIRST) -->
+	<script th:src="@{/static/js/jquery.min.js}"></script>
+
+	<!-- Bootstrap -->
+	<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
+
+	<!-- AdminLTE -->
+	<script th:src="@{/static/js/adminlte.min.js}"></script>
+
+	<!-- DataTables -->
+	<script th:src="@{/static/js/jquery.dataTables.min.js}"></script>
+
+	<script th:src="@{/static/js/dataTables.bootstrap4.min.js}"></script>
+
 </body>
+
 </html>

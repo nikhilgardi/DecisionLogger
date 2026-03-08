@@ -12,6 +12,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
+import com.nikhitech.decisionlogger.security.ActiveMenuInterceptor;
 import com.nikhitech.decisionlogger.security.RBACInterceptor;
 
 @Configuration
@@ -86,9 +87,21 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
+    	/*
+         * RBAC security interceptor
+         */
+    	
         registry.addInterceptor(rbacInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/auth/**", "/static/**");
+        
+        /*
+         * ACTIVE MENU INTERCEPTOR
+         *
+         * Handles sidebar highlighting
+         */
+        registry.addInterceptor(new ActiveMenuInterceptor())
+                .addPathPatterns("/**");
     }
 
     /*
@@ -103,4 +116,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("/static/");
     }
+    
+    
 }

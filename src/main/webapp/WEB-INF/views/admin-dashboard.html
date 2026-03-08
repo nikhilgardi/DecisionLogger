@@ -1,79 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	th:replace="layout :: layout (~{::body})">
+	th:replace="layout :: layout(~{::body})">
 
 <body>
 
 	<div th:fragment="content">
 
-		<h3>Admin Dashboard</h3>
+		<div class="card">
 
-		<h5 class="mt-4">User List</h5>
+			<div class="card-header">
+				<h3 class="card-title">User List</h3>
+			</div>
 
-		<table id="userTable" class="table table-bordered table-striped">
 
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Email</th>
-					<th>Role</th>
-					<th>Status</th>
-					<th>Action</th>
-				</tr>
-			</thead>
+			<div class="card-body">
 
-			<tbody>
+				<table id="userTable" class="table table-bordered table-striped">
 
-				<!-- Loop users normally -->
-				<tr th:each="user : ${users}">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Role</th>
+							<th>Status</th>
+							<th>Action</th>
+						</tr>
+					</thead>
 
-					<td th:text="${user.id}"></td>
-					<td th:text="${user.fullName}"></td>
-					<td th:text="${user.email}"></td>
-					<td th:text="${user.role}"></td>
-					<td th:text="${user.active}"></td>
+					<tbody>
 
-					<td>
+						<tr th:each="user : ${users}">
 
-						<form th:action="@{/admin/deactivate}" method="post">
+							<td th:text="${user.id}"></td>
+							<td th:text="${user.fullName}"></td>
+							<td th:text="${user.email}"></td>
+							<td th:text="${user.role}"></td>
+							<td th:text="${user.active}"></td>
 
-							<input type="hidden" name="userId" th:value="${user.id}">
+							<td>
 
-							<button class="btn btn-danger btn-sm">Deactivate</button>
+								<form th:action="@{/admin/deactivate}" method="post">
 
-						</form>
+									<input type="hidden" name="userId" th:value="${user.id}">
 
-					</td>
+									<button class="btn btn-danger btn-sm">Deactivate</button>
 
-				</tr>
+								</form>
 
-			</tbody>
+							</td>
 
-		</table>
+						</tr>
+
+					</tbody>
+
+				</table>
+
+			</div>
+
+		</div>
 
 	</div>
 
 
-	<!-- jQuery -->
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-	<!-- DataTables -->
-	<script
-		src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
 	<script>
-		$(document).ready(function() {
+$(function(){
 
-			$('#userTable').DataTable({
-				pageLength : 5,
-				language : {
-					emptyTable : "No users found"
-				}
-			});
+$('#userTable').DataTable({
+pageLength:5,
+language:{
+emptyTable:"No users found"
+}
+});
 
-		});
-	</script>
+});
+</script>
 
 </body>
 </html>
