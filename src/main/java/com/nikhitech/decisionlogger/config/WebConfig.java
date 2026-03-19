@@ -118,4 +118,21 @@ public class WebConfig implements WebMvcConfigurer {
     }
     
     
+    /**
+     * Enables default servlet handling.
+     *
+     * Purpose:
+     * Allows static resources (CSS, JS, images) to be served by the container's default servlet
+     * instead of being handled by Spring MVC.
+     *
+     * @param configurer DefaultServletHandlerConfigurer provided by Spring
+     */
+    @Override
+    public void configureDefaultServletHandling(
+            org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer configurer) {
+
+        configurer.enable();
+    }
+    
+    
 }

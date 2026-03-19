@@ -5,9 +5,11 @@ import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -91,10 +93,20 @@ public class AuthController {
      * - Automatically binds form fields to LoginForm object.
      */
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginForm form,
+    public String login(@Valid @ModelAttribute LoginForm form,
+    					BindingResult result,
                         HttpSession session,
                         HttpServletResponse response,
                         Model model) {
+    	
+    	
+    	/*
+         * Validation errors
+         */
+
+        if(result.hasErrors()) {
+            return "login";
+        }
 
     	Optional<User> userOpt =
     	        authService.login(form.getEmail(), form.getPassword());

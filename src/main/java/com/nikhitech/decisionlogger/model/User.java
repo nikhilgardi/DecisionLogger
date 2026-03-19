@@ -82,6 +82,15 @@ public class User {
      * Unique email identifier
      */
     private String email;
+    
+    
+    /**
+     * Hashed password stored in the database.
+     * 
+     * Used for login authentication. 
+     * Plain text password should never be stored here.
+     */
+    private String passwordHash;
 
     /*
      * Enum-based role
@@ -121,7 +130,15 @@ public class User {
         return email;
     }
 
-    public void setEmail(String email) {
+    public String getPasswordHash() {
+		return passwordHash;
+	}
+
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
+	}
+
+	public void setEmail(String email) {
         this.email = email;
     }
 

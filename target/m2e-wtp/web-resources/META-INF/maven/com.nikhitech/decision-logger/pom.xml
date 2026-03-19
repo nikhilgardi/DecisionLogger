@@ -85,6 +85,39 @@
 			<version>42.7.3</version>
 		</dependency>
 
+		<!-- Hibernate Validator implementation of Bean Validation (JSR 380) -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId> <!-- Hibernate Validator
+			group -->
+			<artifactId>hibernate-validator</artifactId> <!-- Implementation of
+			the validation framework -->
+			<version>6.2.5.Final</version> <!-- Stable release compatible with
+			Bean Validation 2.0 -->
+		</dependency>
+
+		<!-- Bean Validation API (JSR 380) specification -->
+		<dependency>
+			<groupId>javax.validation</groupId> <!-- Javax validation
+			specification package -->
+			<artifactId>validation-api</artifactId> <!-- Defines validation
+			annotations like @NotNull, @Size -->
+			<version>2.0.1.Final</version> <!-- Bean Validation 2.0 API version -->
+		</dependency>
+		
+		<!-- Logging dependencies: SLF4J API with Logback implementation -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.9</version>
+		</dependency>
+
+		<!-- Logback provides the actual logging implementation -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.4.11</version>
+		</dependency>
+
 
 	</dependencies>
 

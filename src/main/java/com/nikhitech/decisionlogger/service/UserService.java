@@ -69,42 +69,34 @@ import java.util.List;
 
 public interface UserService {
 
-    /*
-     ===============================================================
-     FETCH ALL USERS
-     ===============================================================
+	/**
+	 * Fetches all active users.
+	 * 
+	 * @return List of users
+	 */
+	List<User> getAllUsers();
 
-     Used by:
-     - Admin dashboard
 
-     Returns:
-     - List of all active users
-     */
-    List<User> getAllUsers();
+	/**
+	 * Deactivates a user.
+	 * 
+	 * @param userId ID of the user to deactivate
+	 */
+	void deactivateUser(Long userId);
 
-    /*
-     ===============================================================
-     DEACTIVATE USER
-     ===============================================================
 
-     Used by:
-     - Admin panel
-
-     Business Rule:
-     - Deactivated users cannot login.
-     */
-    void deactivateUser(Long userId);
+	/**
+	 * Fetches users for admin panel (excluding admins).
+	 * 
+	 * @return List of normal users
+	 */
+	List<User> getUsersForAdmin();
     
     
-    /*
-    ===============================================================
-    FETCH USERS FOR ADMIN PANEL
-    ===============================================================
-
-    Purpose:
-    Returns only normal users (role = USER)
-
-    Admin accounts should NOT appear in the list.
-    */
-    List<User> getUsersForAdmin();
+    /**
+     * Creates a new user.
+     * 
+     * @param user User object containing user details
+     */
+    void createUser(User user);
 }

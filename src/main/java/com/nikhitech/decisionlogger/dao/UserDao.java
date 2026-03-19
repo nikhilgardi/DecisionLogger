@@ -115,73 +115,53 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    /*
-     ===============================================================
-     LOGIN AUTHENTICATION QUERY
-     ===============================================================
+	/**
+	 * Finds user by email and password.
+	 * 
+	 * @param email User email
+	 * @param password User password
+	 * @return Optional user
+	 */
+	Optional<User> findByEmailAndPassword(String email, String password);
 
-     PURPOSE
-     ---------------------------------------------------------------
-     Fetch user during login validation.
 
-     PARAMETERS
-     ---------------------------------------------------------------
-     email
-     password
+	/**
+	 * Finds user by ID.
+	 * 
+	 * @param id User ID
+	 * @return Optional user
+	 */
+	Optional<User> findById(Long id);
 
-     RETURN
-     ---------------------------------------------------------------
-     Optional<User>
 
-     WHY Optional?
-     ---------------------------------------------------------------
-     Avoids returning null.
-    */
-    Optional<User> findByEmailAndPassword(String email, String password);
+	/**
+	 * Fetches all users.
+	 * 
+	 * @return List of users
+	 */
+	List<User> findAll();
 
-    /*
-     ===============================================================
-     FIND USER BY ID
-     ===============================================================
 
-     PURPOSE
-     ---------------------------------------------------------------
-     Used for:
+	/**
+	 * Deactivates a user.
+	 * 
+	 * @param userId ID of the user
+	 */
+	void deactivate(Long userId);
 
-     • Remember-Me login
-     • Session restoration
-    */
-    Optional<User> findById(Long id);
 
-    /*
-     ===============================================================
-     FETCH ALL USERS
-     ===============================================================
-
-     PURPOSE
-     ---------------------------------------------------------------
-     Used by ADMIN dashboard to view user list.
-    */
-    List<User> findAll();
-
-    /*
-     ===============================================================
-     DEACTIVATE USER
-     ===============================================================
-
-     PURPOSE
-     ---------------------------------------------------------------
-     Allows admin to disable user login.
-    */
-    void deactivate(Long userId);
-    
-    /*
-    ===============================================================
-    FETCH USERS FOR ADMIN MANAGEMENT
-    ===============================================================
-
-    Returns only USER role records.
-    ADMIN users excluded.
-    */
-    List<User> findUsersForAdmin();
+	/**
+	 * Fetches users for admin (excluding admins).
+	 * 
+	 * @return List of normal users
+	 */
+	List<User> findUsersForAdmin();
+	
+	
+	/**
+	 * Saves a new user into the database.
+	 * 
+	 * @param user User object to insert
+	 */
+	void save(User user);
 }

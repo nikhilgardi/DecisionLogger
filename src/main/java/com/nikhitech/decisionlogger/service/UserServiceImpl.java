@@ -116,107 +116,60 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
-    /*
-     ===============================================================
-     FETCH ALL USERS
-     ===============================================================
-
-     PURPOSE
-     ---------------------------------------------------------------
-     Used by ADMIN dashboard to retrieve all users.
-
-     FLOW
-     ---------------------------------------------------------------
-
-     Controller
-         ↓
-     Service Layer
-         ↓
-     DAO Layer
-         ↓
-     Database
-
-     RETURN
-     ---------------------------------------------------------------
-     List<User>
-    */
-
+    /**
+     * Fetches all users.
+     * 
+     * @return List of users
+     */
     @Override
     public List<User> getAllUsers() {
-
-        /*
-         Delegates to DAO.
-
-         Service layer could add additional logic here like:
-
-         • Filtering inactive users
-         • Pagination
-         • Business validations
-         */
         return userDao.findAll();
     }
 
-    /*
-     ===============================================================
-     DEACTIVATE USER
-     ===============================================================
 
-     PURPOSE
-     ---------------------------------------------------------------
-     Allows admin to deactivate a user account.
-
-     BUSINESS RULE
-     ---------------------------------------------------------------
-     Deactivated users cannot login to the system.
-
-     VALIDATION
-     ---------------------------------------------------------------
-     Prevents null userId.
-
-     FLOW
-     ---------------------------------------------------------------
-
-     Controller
-         ↓
-     Service validation
-         ↓
-     DAO update
-         ↓
-     Database
-    */
-
+    /**
+     * Deactivates a user.
+     * 
+     * @param userId ID of the user
+     */
     @Override
     public void deactivateUser(Long userId) {
 
-        /*
-         Basic validation
-
-         Defensive programming technique.
-        */
+        // Validate input
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
 
-        /*
-         Delegate database update to DAO layer.
-        */
+        // Delegate to DAO
         userDao.deactivate(userId);
     }
-    
-    /*
-    ===============================================================
-    FETCH USERS FOR ADMIN PANEL
-    ===============================================================
 
-    Business Rule:
-    Admin should only manage USER accounts.
 
-    ADMIN accounts should not appear in the table.
-    */
-
+    /**
+     * Fetches users for admin panel (excluding admins).
+     * 
+     * @return List of normal users
+     */
     @Override
     public List<User> getUsersForAdmin() {
-
         return userDao.findUsersForAdmin();
+    }
+    
+    
+    /**
+     * Creates a new user.
+     * 
+     * @param user User object to be saved
+     */
+    @Override
+    public void createUser(User user) {
+
+        // Validate input
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        // Delegate to DAO
+        userDao.save(user);
     }
 }

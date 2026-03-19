@@ -1,5 +1,8 @@
 package com.nikhitech.decisionlogger.model;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 /*
  * ===============================================================
  * LOGIN FORM DTO
@@ -36,35 +39,39 @@ package com.nikhitech.decisionlogger.model;
 
 public class LoginForm {
 
-    private String email;
-    private String password;
-    private boolean rememberMe;
+	@NotBlank(message = "Email is required")
+	@Email(message = "Invalid email format")
+	private String email;
 
-    public String getEmail() {
-        return email;
-    }
+	@NotBlank(message = "Password is required")
+	private String password;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	private boolean rememberMe;
 
-    public String getPassword() {
-        return password;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    /*
-     * Password stored temporarily.
-     * Never stored in session.
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public boolean isRememberMe() {
-        return rememberMe;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setRememberMe(boolean rememberMe) {
-        this.rememberMe = rememberMe;
-    }
+	/*
+	 * Password stored temporarily. Never stored in session.
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public boolean isRememberMe() {
+		return rememberMe;
+	}
+
+	public void setRememberMe(boolean rememberMe) {
+		this.rememberMe = rememberMe;
+	}
 }

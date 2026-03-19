@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout :: layout(~{::body})">
+
+<body>
+
+<div th:fragment="content">
+
+    <div class="card text-center">
+
+        <div class="card-header">
+            <h3>Error</h3>
+        </div>
+
+        <div class="card-body">
+
+            <h1 th:text="${errorCode}"></h1>
+
+            <p th:text="${message}"></p>
+
+            <a th:href="@{/}" class="btn btn-primary">
+                Go Home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

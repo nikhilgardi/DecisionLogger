@@ -330,3 +330,52 @@ USING (
         AND r.role_name = 'ADMIN'
     )
 );
+
+
+
+ALTER TABLE users
+ADD COLUMN failed_attempts INT DEFAULT 0,
+ADD COLUMN account_locked BOOLEAN DEFAULT FALSE,
+ADD COLUMN lock_time TIMESTAMP,
+ADD COLUMN password_changed_at TIMESTAMP;
+
+COMMENT ON COLUMN users.failed_attempts IS 'Number of consecutive failed login attempts';
+COMMENT ON COLUMN users.account_locked IS 'Indicates whether the account is locked due to multiple failed login attempts';
+COMMENT ON COLUMN users.lock_time IS 'Timestamp when the account was locked';
+COMMENT ON COLUMN users.password_changed_at IS 'Timestamp of the last password change';
+
+CREATE TABLE login_audit (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT,
+    email VARCHAR(255),
+    ip_address VARCHAR(50),
+    success BOOLEAN,
+    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+COMMENT ON TABLE login_audit IS 'Stores login attempt history for auditing and security monitoring';
+
+COMMENT ON COLUMN login_audit.id IS 'Primary key for the login audit record';
+COMMENT ON COLUMN login_audit.user_id IS 'Reference to the user attempting login';
+COMMENT ON COLUMN login_audit.email IS 'Email used during the login attempt';
+COMMENT ON COLUMN login_audit.ip_address IS 'IP address from which the login attempt was made';
+COMMENT ON COLUMN login_audit.success IS 'Indicates whether the login attempt was successful';
+COMMENT ON COLUMN login_audit.login_time IS 'Timestamp when the login attempt occurred';
+
+
+CREATE TABLE login_otp (
+    id BIGSERIAL PRIMARY KEY, -- Unique identifier for each OTP record
+    user_id BIGINT, -- ID of the user for whom the OTP is generated
+    otp_code VARCHAR(10), -- One-time password code
+    expires_at TIMESTAMP, -- Expiration timestamp of the OTP
+    used BOOLEAN DEFAULT FALSE -- Indicates whether the OTP has already been used
+);
+
+-- Add comments for better schema documentation
+COMMENT ON TABLE login_otp IS 'Stores one-time passwords (OTPs) for user authentication';
+
+COMMENT ON COLUMN login_otp.id IS 'Primary key for the OTP record';
+COMMENT ON COLUMN login_otp.user_id IS 'Reference ID of the user for whom the OTP was generated';
+COMMENT ON COLUMN login_otp.otp_code IS 'The OTP value sent to the user';
+COMMENT ON COLUMN login_otp.expires_at IS 'Expiration date and time of the OTP';
+COMMENT ON COLUMN login_otp.used IS 'Flag indicating whether the OTP has been used';

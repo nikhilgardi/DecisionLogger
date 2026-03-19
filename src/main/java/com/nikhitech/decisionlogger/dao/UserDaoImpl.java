@@ -162,245 +162,136 @@ public class UserDaoImpl implements UserDao {
     }
 
 
-    /*
-     ===============================================================
-     LOGIN AUTHENTICATION
-     ===============================================================
-
-     METHOD
-     ---------------------------------------------------------------
-     findByEmailAndPassword()
-
-     PURPOSE
-     ---------------------------------------------------------------
-     Used during login authentication.
-
-     This query validates:
-
-     ✔ Email
-     ✔ Password (hashed comparison)
-     ✔ User active status
-     ✔ Soft delete status
-
-
-     SECURITY IMPLEMENTATION
-     ---------------------------------------------------------------
-
-     Password verification uses PostgreSQL crypt() function.
-
-     Example:
-
-     crypt(enteredPassword, storedHash)
-
-     If hash matches → authentication success.
-
-     This ensures password is NEVER stored or compared as plain text.
-
-
-     QUERY FLOW
-     ---------------------------------------------------------------
-
-     Database Tables
-
-     users
-        ↓
-     roles
-
-
-     RETURN TYPE
-     ---------------------------------------------------------------
-
-     Optional<User>
-
-     Why Optional?
-
-     ✔ Avoids returning null
-     ✔ Forces caller to handle absence safely
-     ✔ Java 8 best practice
-    */
-
+    /**
+     * Finds a user by email and password for login authentication.
+     * 
+     * Passwords are validated using PostgreSQL crypt() function.
+     * 
+     * @param email User email
+     * @param password User password
+     * @return Optional<User> if authentication succeeds
+     */
     @Override
     public Optional<User> findByEmailAndPassword(String email, String password) {
 
-        /*
-         SQL Query
-
-         JOIN users and roles table to fetch role_name.
-        */
         String sql =
-                "SELECT u.id, u.full_name, u.email, r.role_name, u.is_active " +
-                "FROM users u " +
-                "JOIN roles r ON u.role_id = r.id " +
-                "WHERE u.email = ? " +
-                "AND u.password_hash = crypt(?, u.password_hash) " +
-                "AND u.deleted_at IS NULL " +
-                "AND u.is_active = TRUE";
+            "SELECT u.id, u.full_name, u.email, r.role_name, u.is_active " +
+            "FROM users u " +
+            "JOIN roles r ON u.role_id = r.id " +
+            "WHERE u.email = ? " +
+            "AND u.password_hash = crypt(?, u.password_hash) " +
+            "AND u.deleted_at IS NULL " +
+            "AND u.is_active = TRUE";
 
-        /*
-         JdbcTemplate.query()
-
-         Executes SELECT query.
-
-         PARAMETERS
-         -----------------------------------------------------------
-         sql → SQL statement
-         rowMapper → maps ResultSet to User object
-         email,password → bind parameters
-        */
-
-        List<User> users = jdbcTemplate.query(
-                sql,
-                new UserRowMapper(),
-                email,
-                password
-        );
-
-        /*
-         Java 8 Stream API
-
-         Convert List<User> → Optional<User>
-        */
+        List<User> users = jdbcTemplate.query(sql, new UserRowMapper(), email, password);
         return users.stream().findFirst();
     }
 
 
-    /*
-     ===============================================================
-     FIND USER BY ID
-     ===============================================================
-
-     PURPOSE
-     ---------------------------------------------------------------
-     Used for:
-
-     ✔ Remember-Me login
-     ✔ Session restoration
-     ✔ Fetch user details
-
-
-     FLOW
-     ---------------------------------------------------------------
-
-     Controller
-         ↓
-     Service
-         ↓
-     DAO
-         ↓
-     SQL Query
-    */
-
+    /**
+     * Finds a user by ID.
+     * 
+     * @param id User ID
+     * @return Optional<User> if found
+     */
     @Override
     public Optional<User> findById(Long id) {
 
         String sql =
-                "SELECT u.id, u.full_name, u.email, r.role_name, u.is_active " +
-                "FROM users u " +
-                "JOIN roles r ON u.role_id = r.id " +
-                "WHERE u.id = ?";
+            "SELECT u.id, u.full_name, u.email, r.role_name, u.is_active " +
+            "FROM users u " +
+            "JOIN roles r ON u.role_id = r.id " +
+            "WHERE u.id = ?";
 
-        /*
-         JdbcTemplate.query() returns List<User>
-         Convert to Optional using stream.
-        */
-        return jdbcTemplate.query(
-                sql,
-                new UserRowMapper(),
-                id
-        ).stream().findFirst();
+        return jdbcTemplate.query(sql, new UserRowMapper(), id).stream().findFirst();
     }
 
 
-    /*
-     ===============================================================
-     FETCH ALL USERS
-     ===============================================================
-
-     PURPOSE
-     ---------------------------------------------------------------
-     Used by ADMIN dashboard to display all users.
-
-     FILTER CONDITIONS
-     ---------------------------------------------------------------
-
-     deleted_at IS NULL
-
-     This implements **Soft Delete Strategy**.
-
-     Instead of deleting rows,
-     rows are marked as deleted.
-    */
-
+    /**
+     * Fetches all users (excluding soft-deleted users).
+     * 
+     * @return List of active users
+     */
     @Override
     public List<User> findAll() {
 
         String sql =
-                "SELECT u.id, u.full_name, u.email, r.role_name, u.is_active " +
-                "FROM users u " +
-                "JOIN roles r ON u.role_id = r.id " +
-                "WHERE u.deleted_at IS NULL";
+            "SELECT u.id, u.full_name, u.email, r.role_name, u.is_active " +
+            "FROM users u " +
+            "JOIN roles r ON u.role_id = r.id " +
+            "WHERE u.deleted_at IS NULL";
 
-        /*
-         JdbcTemplate.query()
-
-         Executes SELECT query and maps rows to User objects.
-        */
         return jdbcTemplate.query(sql, new UserRowMapper());
     }
 
 
-    /*
-     ===============================================================
-     DEACTIVATE USER
-     ===============================================================
-
-     PURPOSE
-     ---------------------------------------------------------------
-     Allows ADMIN to deactivate a user.
-
-     BUSINESS RULE
-     ---------------------------------------------------------------
-
-     Deactivated users:
-
-     ❌ Cannot login
-     ❌ Cannot access application
-
-
-     SQL OPERATION
-     ---------------------------------------------------------------
-
-     UPDATE users
-     SET is_active = FALSE
-     WHERE id = ?
-    */
-
+    /**
+     * Deactivates a user.
+     * 
+     * @param userId ID of the user to deactivate
+     */
     @Override
     public void deactivate(Long userId) {
 
-        jdbcTemplate.update(
-                "UPDATE users SET is_active = FALSE WHERE id = ?",
-                userId
-        );
+        jdbcTemplate.update("UPDATE users SET is_active = FALSE WHERE id = ?", userId);
     }
-    
 
-    /*FETCH USERS FOR ADMIN DASHBOARD
-    		Filters:
-    		• Only USER role
-    		• Not soft deleted
-    		*/
+
+    /**
+     * Fetches users for admin panel (role = USER, excluding soft-deleted users).
+     * 
+     * @return List of normal users
+     */
+    @Override
+    public List<User> findUsersForAdmin() {
+
+        String sql =
+            "SELECT u.id, u.full_name, u.email, r.role_name, u.is_active " +
+            "FROM users u " +
+            "JOIN roles r ON u.role_id = r.id " +
+            "WHERE r.role_name = 'USER' " +
+            "AND u.deleted_at IS NULL";
+
+        return jdbcTemplate.query(sql, new UserRowMapper());
+    }
+
+	
+	/**
+	 * Saves a new user in the database.
+	 * 
+	 * @param user User object to insert
+	 */
 	@Override
-	public List<User> findUsersForAdmin() {
+	public void save(User user) {
 
+	    // Insert user with password hashed using PostgreSQL crypt() + bcrypt
 	    String sql =
-	            "SELECT u.id, u.full_name, u.email, r.role_name, u.is_active " +
-	            "FROM users u " +
-	            "JOIN roles r ON u.role_id = r.id " +
-	            "WHERE r.role_name = 'USER' " +
-	            "AND u.deleted_at IS NULL";
+	        "INSERT INTO users (full_name, email, password_hash, role_id, is_active) " +
+	        "VALUES (?, ?, crypt(?, gen_salt('bf')), ?, TRUE)";
 
-	    return jdbcTemplate.query(sql, new UserRowMapper());
+	    jdbcTemplate.update(
+	        sql,
+	        user.getFullName(),   // from form
+	        user.getEmail(),      // from form
+	        user.getPasswordHash(),   // hashed by DB
+	        getRoleId(user)       // convert Role enum → DB role_id
+	    );
 	}
 
+
+	/**
+	 * Converts User role to corresponding database role_id.
+	 * 
+	 * @param user User object
+	 * @return Role ID for DB
+	 */
+	private int getRoleId(User user) {
+	    // ADMIN → 1
+	    if ("ADMIN".equals(user.getRole().name())) {
+	        return 1;
+	    }
+
+	    // Default USER → 2
+	    return 2;
+	}
 }
