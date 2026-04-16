@@ -1,10 +1,12 @@
 package com.nikhitech.decisionlogger.controller;
 
-import com.nikhitech.decisionlogger.model.User;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.nikhitech.decisionlogger.model.User;
 
 /*
  * ===============================================================
@@ -26,7 +28,7 @@ public class HomeController {
      * Decides dashboard based on role.
      */
     @GetMapping("/")
-    public String home(HttpSession session) {
+    public String home(HttpSession session, Model model) {
 
         User user =
                 (User) session.getAttribute("user");
@@ -34,6 +36,8 @@ public class HomeController {
         if (user == null) {
             return "redirect:/auth/login";
         }
+        
+        model.addAttribute("user", user);
 
         if (user.getRole().name().equals("ADMIN")) {
             return "redirect:/admin/dashboard";
