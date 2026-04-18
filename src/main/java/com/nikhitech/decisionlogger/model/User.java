@@ -1,5 +1,13 @@
 package com.nikhitech.decisionlogger.model;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import com.nikhitech.decisionlogger.interfaces.CreateUserGroup;
+import com.nikhitech.decisionlogger.interfaces.LoginGroup;
+
 /*
  * ===============================================================
  * USER DOMAIN MODEL
@@ -76,11 +84,14 @@ public class User {
     /*
      * User display name
      */
+    @NotBlank(message = "Name is required", groups = CreateUserGroup.class)
     private String fullName;
 
     /*
      * Unique email identifier
      */
+    @NotBlank(message = "Email is required", groups = {CreateUserGroup.class, LoginGroup.class})
+    @Email(message = "Invalid email", groups = {CreateUserGroup.class, LoginGroup.class})
     private String email;
     
     
@@ -90,6 +101,13 @@ public class User {
      * Used for login authentication. 
      * Plain text password should never be stored here.
      */
+    @NotBlank(message = "Password is required", groups = {CreateUserGroup.class, LoginGroup.class})
+    @Size(min = 8, max = 12, message = "Password must be 8–12 characters", groups = CreateUserGroup.class)
+    @Pattern(
+        regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,12}$",
+        message = "Password must contain uppercase, number, and special character",
+        groups = CreateUserGroup.class
+    )
     private String password;
 
     /*

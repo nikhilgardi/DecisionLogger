@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nikhitech.decisionlogger.exception.AppException;
+import com.nikhitech.decisionlogger.interfaces.CreateUserGroup;
 import com.nikhitech.decisionlogger.model.Role;
 import com.nikhitech.decisionlogger.model.User;
 import com.nikhitech.decisionlogger.security.RoleAllowed;
@@ -195,10 +198,16 @@ public class AdminController {
 	 * @return Redirects to admin dashboard after successful creation
 	 */
 	@PostMapping("/create-user")
-	public String createUser(@ModelAttribute User user,
+	public String createUser( @Validated(CreateUserGroup.class) @ModelAttribute User user,
+			 				 BindingResult result,
 	                         Model model,
 	                         RedirectAttributes redirectAttributes) {
-
+		  // ✅ HANDLE VALIDATION ERRORS HERE
+		logger.info("Create Resule::{}",result.hasErrors());
+	    if (result.hasErrors()) {
+	        model.addAttribute("user", user);
+	        return "create-user"; // stay on form
+	    }
 	    try {
 	        userService.createUser(user);
 

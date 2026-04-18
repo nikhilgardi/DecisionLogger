@@ -3,6 +3,8 @@ package com.nikhitech.decisionlogger.model;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.nikhitech.decisionlogger.interfaces.LoginGroup;
+
 /*
  * ===============================================================
  * LOGIN FORM DTO
@@ -39,11 +41,11 @@ import javax.validation.constraints.NotBlank;
 
 public class LoginForm {
 
-	@NotBlank(message = "Email is required")
-	@Email(message = "Invalid email format")
+	@NotBlank(message = "Email is required", groups = LoginGroup.class)
+    @Email(message = "Invalid email", groups = LoginGroup.class)
 	private String email;
 
-	@NotBlank(message = "Password is required")
+    @NotBlank(message = "Password is required", groups = LoginGroup.class)
 	private String password;
 
 	private boolean rememberMe;

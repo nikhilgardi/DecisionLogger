@@ -1,5 +1,26 @@
-
 .nav-sidebar .nav-link.active {
     background-color: #007bff;
     color: white;
+}
+
+.required-star {
+	color: red;
+	margin-left: 3px;
+}
+
+.password-strength {
+	height: 5px;
+	margin-top: 5px;
+}
+
+.strength-weak {
+	background: red;
+}
+
+.strength-medium {
+	background: orange;
+}
+
+.strength-strong {
+	background: green;
 }

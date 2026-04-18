@@ -5,16 +5,19 @@ import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nikhitech.decisionlogger.interfaces.LoginGroup;
 import com.nikhitech.decisionlogger.model.LoginForm;
 import com.nikhitech.decisionlogger.model.User;
 import com.nikhitech.decisionlogger.service.AuthService;
@@ -62,6 +65,8 @@ import com.nikhitech.decisionlogger.service.AuthService;
 @RequestMapping("/auth")
 public class AuthController {
 
+	Logger logger = LoggerFactory.getLogger(AdminController.class);
+	
     private final AuthService authService;
 
     public AuthController(AuthService authService) {
@@ -93,7 +98,7 @@ public class AuthController {
      * - Automatically binds form fields to LoginForm object.
      */
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm form,
+    public String login( @Validated(LoginGroup.class) @ModelAttribute LoginForm form,
     					BindingResult result,
                         HttpSession session,
                         HttpServletResponse response,
@@ -103,6 +108,8 @@ public class AuthController {
     	/*
          * Validation errors
          */
+    	
+    	logger.info("Resule::{}",result.hasErrors());
 
         if(result.hasErrors()) {
             return "login";

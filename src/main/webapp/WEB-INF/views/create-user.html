@@ -27,21 +27,21 @@
 					<!-- NAME -->
 					<div class="mb-3">
 						<label>Name</label> <input type="text" th:field="*{fullName}"
-							class="form-control" required>
+							class="form-control">
 					</div>
 					<!-- EMAIL -->
 					<div class="mb-3">
 						<label>Email</label> <input type="email" th:field="*{email}"
-							class="form-control" required>
+							class="form-control">
 					</div>
 					<!-- PASSWORD -->
 					<div class="mb-3">
 						<label>Password</label>
 						<div class="input-group">
 							<input type="password" id="password" th:field="*{password}"
-								class="form-control"
-								placeholder="Min 8 chars, include A-Z, 0-9, special char"
-								required>
+								class="form-control" maxLength="16"
+								placeholder="Min 8 chars Max 16 chars, include A-Z, 0-9, special char"
+								>
 							<!-- TOGGLE PASSWORD -->
 							<button class="btn btn-outline-secondary" type="button"
 								id="togglePassword">
@@ -74,7 +74,7 @@
 
 	</div>
 
-<script th:src="@{/static/js/passwordtoggle.js}"></script>
+
 
 </body>
 </html>

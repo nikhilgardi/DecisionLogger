@@ -13,29 +13,8 @@
 <!-- FontAwesome -->
 <link rel="stylesheet" th:href="@{/static/css/all.min.css}">
 
-<style>
-.required-star {
-	color: red;
-	margin-left: 3px;
-}
+<link rel="stylesheet" th:href="@{/static/css/style.css}">
 
-.password-strength {
-	height: 5px;
-	margin-top: 5px;
-}
-
-.strength-weak {
-	background: red;
-}
-
-.strength-medium {
-	background: orange;
-}
-
-.strength-strong {
-	background: green;
-}
-</style>
 
 </head>
 
@@ -71,7 +50,7 @@
 								<label> Email <span class="required-star">*</span>
 								</label> <input type="email" id="email" class="form-control"
 									autocomplete="off" th:field="*{email}"
-									placeholder="Enter email" required>
+									placeholder="Enter email">
 
 								<div class="text-danger mt-1"
 									th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
@@ -89,8 +68,8 @@
 
 								<div class="input-group">
 
-									<input type="password" id="password" class="form-control"
-										th:field="*{password}" placeholder="Enter password" required>
+									<input type="password" id="password" class="form-control" maxLength="16"
+										th:field="*{password}" placeholder="Enter password">
 
 									<button class="btn btn-outline-secondary" type="button"
 										id="togglePassword">
@@ -132,9 +111,7 @@
 
 							<!-- ================= LOGIN BUTTON ================= -->
 
-							<button id="loginButton" class="btn btn-primary w-100" disabled>
-
-								Login</button>
+							<button id="loginButton" class="btn btn-primary w-100">Login</button>
 
 						</form>
 
@@ -150,100 +127,7 @@
 
 
 
-	<script>
-		
-
-		/* ======================================
-		 PASSWORD STRENGTH
-		 ====================================== */
-
-		document.getElementById("password").addEventListener("input",
-				function() {
-
-					const value = this.value;
-
-					const bar = document.getElementById("passwordStrengthBar");
-
-					let strength = 0;
-
-					if (value.length >= 6)
-						strength++;
-
-					if (/[A-Z]/.test(value))
-						strength++;
-
-					if (/[0-9]/.test(value))
-						strength++;
-
-					if (/[@$!%*?&]/.test(value))
-						strength++;
-
-					let width = strength * 25;
-
-					bar.style.width = width + "%";
-
-					bar.className = "progress-bar";
-
-					if (strength <= 1) {
-						bar.classList.add("strength-weak");
-					}
-
-					else if (strength == 2 || strength == 3) {
-						bar.classList.add("strength-medium");
-					}
-
-					else {
-						bar.classList.add("strength-strong");
-					}
-
-				});
-
-		/* ======================================
-		 FORM VALIDATION
-		 ENABLE LOGIN BUTTON
-		 ====================================== */
-
-		const emailInput = document.getElementById("email");
-
-		const passwordInput = document.getElementById("password");
-
-		const loginButton = document.getElementById("loginButton");
-
-		function validateForm() {
-
-			if (emailInput.value.trim() !== ""
-					&& passwordInput.value.trim() !== "") {
-
-				loginButton.disabled = false;
-
-			} else {
-
-				loginButton.disabled = true;
-
-			}
-
-		}
-
-		emailInput.addEventListener("input", validateForm);
-		passwordInput.addEventListener("input", validateForm);
-
-		/* ======================================
-		 ENTER KEY SUBMIT
-		 ====================================== */
-
-		document.getElementById("loginForm").addEventListener("keypress",
-				function(e) {
-
-					if (e.key === "Enter") {
-
-						if (!loginButton.disabled) {
-							this.submit();
-						}
-
-					}
-
-				});
-	</script>
+	
 <script th:src="@{/static/js/passwordtoggle.js}"></script>
 </body>
 
