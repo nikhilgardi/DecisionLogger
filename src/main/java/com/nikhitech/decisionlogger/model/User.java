@@ -90,7 +90,7 @@ public class User {
      * Used for login authentication. 
      * Plain text password should never be stored here.
      */
-    private String passwordHash;
+    private String password;
 
     /*
      * Enum-based role
@@ -130,12 +130,12 @@ public class User {
         return email;
     }
 
-    public String getPasswordHash() {
-		return passwordHash;
+    public String getPassword() {
+		return password;
 	}
 
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public void setEmail(String email) {
@@ -157,4 +157,13 @@ public class User {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", fullName=" + fullName + ", email=" + email + ", password=" + password + ", role="
+				+ role + ", active=" + active + "]";
+	}
+
+    	
+    
 }

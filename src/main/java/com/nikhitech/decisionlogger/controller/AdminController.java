@@ -1,5 +1,7 @@
 package com.nikhitech.decisionlogger.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,7 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.nikhitech.decisionlogger.exception.AppException;
 import com.nikhitech.decisionlogger.model.Role;
 import com.nikhitech.decisionlogger.model.User;
 import com.nikhitech.decisionlogger.security.RoleAllowed;
@@ -86,6 +90,8 @@ import com.nikhitech.decisionlogger.service.UserService;
 @RequestMapping("/admin")
 @RoleAllowed(Role.ADMIN)
 public class AdminController {
+	
+	Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	/*
 	 * Dependencies injected by Spring container.
@@ -117,8 +123,7 @@ public class AdminController {
 	@GetMapping("/dashboard")
 	public String dashboard(Model model) {
 
-	    // Add users to model
-	    model.addAttribute("users", userService.getUsersForAdmin());
+	  
 
 	    // Add decisions to model
 	    model.addAttribute("decisions", decisionService.getAllDecisions());
@@ -153,12 +158,31 @@ public class AdminController {
 	 * @param model Spring Model object used to pass data to the view
 	 * @return Thymeleaf template name for creating a user
 	 */
+	@GetMapping("/get-user")
+	public String displayUserList(Model model) {
+
+		// Initialize an empty User object
+		// This is required for form binding in Thymeleaf (th:object)
+		model.addAttribute("user", new User());
+
+		// Return the view name (create-user.html)
+		return "user_list";
+	}
+	
+	/**
+	 * Displays the user creation form.
+	 * 
+	 * @param model Spring Model object used to pass data to the view
+	 * @return Thymeleaf template name for creating a user
+	 */
 	@GetMapping("/create-user")
 	public String showCreateUserForm(Model model) {
 
 		// Initialize an empty User object
 		// This is required for form binding in Thymeleaf (th:object)
-		model.addAttribute("user", new User());
+		 if (!model.containsAttribute("user")) {
+		        model.addAttribute("user", new User());
+		    }
 
 		// Return the view name (create-user.html)
 		return "create-user";
@@ -171,15 +195,24 @@ public class AdminController {
 	 * @return Redirects to admin dashboard after successful creation
 	 */
 	@PostMapping("/create-user")
-	public String createUser(@ModelAttribute User user) {
+	public String createUser(@ModelAttribute User user,
+	                         Model model,
+	                         RedirectAttributes redirectAttributes) {
 
-		// Call service layer to handle business logic and persistence
-		// Keeps controller thin and follows separation of concerns
-		userService.createUser(user);
+	    try {
+	        userService.createUser(user);
 
-		// Redirect to dashboard to:
-		// 1. Prevent duplicate form submission (PRG pattern)
-		// 2. Show updated state
-		return "redirect:/admin/dashboard";
+	        redirectAttributes.addFlashAttribute("success", "User created successfully");
+	        return "redirect:/admin/get-user";
+
+	    } catch (AppException ex) {
+
+	       // model.addAttribute("user", user);
+	       // model.addAttribute("error", ex.getMessage());
+	    	
+	    	 redirectAttributes.addFlashAttribute("error", ex.getMessage());
+
+	    	 return "redirect:/admin/get-user";
+	    }
 	}
 }

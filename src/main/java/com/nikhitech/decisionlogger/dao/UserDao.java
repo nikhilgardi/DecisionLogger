@@ -164,4 +164,12 @@ public interface UserDao {
 	 * @param user User object to insert
 	 */
 	void save(User user);
+	
+	/**
+	 * Checks whether a user exists in the database for the given email address.
+	 *
+	 * @param email email address to check
+	 * @return true if a user with the given email exists, false otherwise
+	 */
+	boolean existsByEmail(String email);
 }

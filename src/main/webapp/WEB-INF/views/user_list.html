@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org"
+	th:replace="layout::layout(~{::body})">
+<body>
+	<div th:fragment="content">
+		<!-- SUCCESS -->
+		<div class="alert alert-success" th:if="${success}"
+			th:text="${success}"></div>
+
+		<!-- ERROR -->
+		<div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+		<div class="card">
+
+			<!-- HEADER -->
+			<!-- HEADER -->
+			<div class="card-header container-fluid">
+				<div class="row">
+					<div class="col-md-10">
+						<h3 class="w-75 p-3">User List</h3>
+					</div>
+					<div class="col-md-2 float-right">
+						<a th:href="@{/admin/create-user}" class="btn btn-primary"> +
+							Create User </a>
+
+					</div>
+				</div>
+			</div>
+			<!-- BODY -->
+			<div class="card-body">
+
+				<table class="table table-bordered table-striped">
+
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Role</th>
+							<th>Status</th>
+							<th width="180">Action</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="user : ${users}">
+
+							<td th:text="${user.id}"></td>
+							<td th:text="${user.fullName}"></td>
+							<td th:text="${user.email}"></td>
+							<td th:text="${user.role}"></td>
+
+							<!-- STATUS -->
+							<td><span th:if="${user.active}" class="badge bg-success">Active</span>
+								<span th:if="${!user.active}" class="badge bg-danger">Inactive</span>
+							</td>
+
+							<!-- ACTIONS -->
+							<td>
+								<!-- EDIT --> <a
+								th:href="@{/admin/edit-user/{id}(id=${user.id})}"
+								class="btn btn-warning btn-sm"> Edit </a> <!-- DEACTIVATE -->
+								<form th:action="@{/admin/deactivate}" method="post"
+									style="display: inline;">
+									<input type="hidden" name="userId" th:value="${user.id}" />
+
+									<button class="btn btn-danger btn-sm"
+										th:disabled="${!user.active}">Deactivate</button>
+								</form>
+
+							</td>
+
+						</tr>
+
+					</tbody>
+
+				</table>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- DATATABLE SCRIPT -->
+	<script>
+		$(function() {
+
+			$('#userTable').DataTable({
+				pageLength : 5,
+				language : {
+					emptyTable : "No users found"
+				}
+			});
+
+		});
+	</script>
+</body>
+</html>

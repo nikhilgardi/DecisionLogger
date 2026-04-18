@@ -3,10 +3,13 @@ package com.nikhitech.decisionlogger.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.nikhitech.decisionlogger.dao.mapper.UserRowMapper;
+import com.nikhitech.decisionlogger.exception.AppException;
+import com.nikhitech.decisionlogger.exception.HttpStatusCode;
 import com.nikhitech.decisionlogger.model.User;
 
 /*
@@ -261,22 +264,25 @@ public class UserDaoImpl implements UserDao {
 	 * 
 	 * @param user User object to insert
 	 */
-	@Override
-	public void save(User user) {
+    @Override
+    public void save(User user) {
+        try {
 
-	    // Insert user with password hashed using PostgreSQL crypt() + bcrypt
-	    String sql =
-	        "INSERT INTO users (full_name, email, password_hash, role_id, is_active) " +
-	        "VALUES (?, ?, crypt(?, gen_salt('bf')), ?, TRUE)";
+            String sql = "INSERT INTO users (full_name, email, password_hash, role_id, is_active) " +
+                         "VALUES (?, ?, crypt(?, gen_salt('bf')), ?, TRUE)";
 
-	    jdbcTemplate.update(
-	        sql,
-	        user.getFullName(),   // from form
-	        user.getEmail(),      // from form
-	        user.getPasswordHash(),   // hashed by DB
-	        getRoleId(user)       // convert Role enum → DB role_id
-	    );
-	}
+            jdbcTemplate.update(sql,
+                    user.getFullName(),
+                    user.getEmail(),
+                    user.getPassword(),
+                    getRoleId(user));
+
+        } catch (DuplicateKeyException ex) {
+
+            // ❌ NO UI MESSAGE HERE
+            throw ex; // pass raw exception
+        }
+    }
 
 
 	/**
@@ -293,5 +299,20 @@ public class UserDaoImpl implements UserDao {
 
 	    // Default USER → 2
 	    return 2;
+	}
+	
+	/**
+	 * Checks whether a user exists in the database with the given email.
+	 *
+	 * @param email the email address to check for existence
+	 * @return true if at least one user exists with the provided email, false otherwise
+	 */
+	public boolean existsByEmail(String email) {
+
+	    String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+
+	    Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+
+	    return count != null && count > 0;
 	}
 }

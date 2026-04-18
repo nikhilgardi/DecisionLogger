@@ -1,10 +1,14 @@
 package com.nikhitech.decisionlogger.service;
 
-import com.nikhitech.decisionlogger.dao.UserDao;
-import com.nikhitech.decisionlogger.model.User;
+import java.util.List;
+
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.nikhitech.decisionlogger.dao.UserDao;
+import com.nikhitech.decisionlogger.exception.AppException;
+import com.nikhitech.decisionlogger.exception.HttpStatusCode;
+import com.nikhitech.decisionlogger.model.User;
 
 /*
  ===============================================================
@@ -164,12 +168,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(User user) {
 
-        // Validate input
         if (user == null) {
-            throw new IllegalArgumentException("User cannot be null");
+            throw new AppException(HttpStatusCode.BAD_REQUEST, "User cannot be null");
         }
 
-        // Delegate to DAO
-        userDao.save(user);
+        try {
+
+            if (userDao.existsByEmail(user.getEmail())) {
+                throw new AppException(HttpStatusCode.CONFLICT, "Email already exists");
+            }
+
+            userDao.save(user);
+
+        } catch (DuplicateKeyException ex) {
+
+            // ✅ BUSINESS MEANING
+            throw new AppException(HttpStatusCode.CONFLICT, "Email already exists");
+        }
     }
 }

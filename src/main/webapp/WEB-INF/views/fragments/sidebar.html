@@ -23,7 +23,7 @@ ADMIN MENU
 
 					 <li class="nav-item" th:if="${session.user.role.name() == 'ADMIN'}">
 
-						<a th:href="@{/admin/dashboard}" class="nav-link"
+						<a th:href="@{/admin/get-user}" class="nav-link"
 						th:classappend="${activeMenu == 'admin'} ? ' active'"> <i
 							class="nav-icon fas fa-users"></i>
 							<p>Users</p>
