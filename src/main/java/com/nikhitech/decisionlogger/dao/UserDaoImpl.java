@@ -8,8 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.nikhitech.decisionlogger.dao.mapper.UserRowMapper;
-import com.nikhitech.decisionlogger.exception.AppException;
-import com.nikhitech.decisionlogger.exception.HttpStatusCode;
+import com.nikhitech.decisionlogger.model.Role;
 import com.nikhitech.decisionlogger.model.User;
 
 /*
@@ -234,9 +233,31 @@ public class UserDaoImpl implements UserDao {
      * @param userId ID of the user to deactivate
      */
     @Override
-    public void deactivate(Long userId) {
+    public int deactivate(Long userId) {
 
-        jdbcTemplate.update("UPDATE users SET is_active = FALSE WHERE id = ?", userId);
+        String sql = "UPDATE users SET is_active = FALSE WHERE id = ?";
+
+        return jdbcTemplate.update(sql, userId);
+    }
+
+    /**
+	 * Status of user(Activate/Deactivate)
+	 * 
+	 * @param userId ID of the user
+	 */
+    public boolean getStatus(Long userId) {
+        String sql = "SELECT is_active FROM users WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, userId);
+    }
+
+    /**
+     * Activate a user.
+     * 
+     * @param userId ID of the user to activate
+     */
+    public int activate(Long userId) {
+        String sql = "UPDATE users SET is_active = TRUE WHERE id = ?";
+        return jdbcTemplate.update(sql, userId);
     }
 
 
@@ -268,6 +289,8 @@ public class UserDaoImpl implements UserDao {
     public void save(User user) {
         try {
 
+        	Long roleId = getRoleIdByName(user.getRole().name());
+        	
             String sql = "INSERT INTO users (full_name, email, password_hash, role_id, is_active) " +
                          "VALUES (?, ?, crypt(?, gen_salt('bf')), ?, TRUE)";
 
@@ -275,7 +298,7 @@ public class UserDaoImpl implements UserDao {
                     user.getFullName(),
                     user.getEmail(),
                     user.getPassword(),
-                    getRoleId(user));
+                    roleId);
 
         } catch (DuplicateKeyException ex) {
 
@@ -283,6 +306,27 @@ public class UserDaoImpl implements UserDao {
             throw ex; // pass raw exception
         }
     }
+    
+    /**
+	 * Updates only the role of a user in the database.
+	 *
+	 * @param userId user ID
+	 * @param role new role to assign
+	 */
+	@Override
+	public void updateUser(User user) {
+
+	    Long roleId = getRoleIdByName(user.getRole().name());
+
+	    String sql = "UPDATE users SET full_name = ?, role_id = ? WHERE id = ?";
+
+	    jdbcTemplate.update(
+	            sql,
+	            user.getFullName(),
+	            roleId,
+	            user.getId()
+	    );
+	}
 
 
 	/**
@@ -315,4 +359,21 @@ public class UserDaoImpl implements UserDao {
 
 	    return count != null && count > 0;
 	}
+	
+	
+	
+	/**
+	 * Retrieves role ID from database using role name.
+	 *
+	 * @param roleName name of the role
+	 * @return role ID
+	 */
+	public Long getRoleIdByName(String roleName) {
+
+	    String sql = "SELECT id FROM roles WHERE role_name = ?";
+
+	    return jdbcTemplate.queryForObject(sql, Long.class, roleName);
+	}
+	
+
 }

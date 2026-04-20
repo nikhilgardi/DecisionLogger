@@ -1,5 +1,7 @@
 package com.nikhitech.decisionlogger.service;
 
+import com.nikhitech.decisionlogger.exception.AppException;
+import com.nikhitech.decisionlogger.model.Role;
 import com.nikhitech.decisionlogger.model.User;
 import java.util.List;
 
@@ -99,4 +101,29 @@ public interface UserService {
      * @param user User object containing user details
      */
     void createUser(User user);
+    
+    /**
+	 * Deactivates/Activate a user.
+	 * 
+	 * @param userId ID of the user to deactivate/activate
+	 */
+    boolean toggleUserStatus(Long userId);
+    
+    /**
+     * Fetches a user by ID.
+     *
+     * @param id user ID
+     * @return User object
+     * @throws AppException if ID is null
+     */
+    User getUserById(Long id);
+    
+    /**
+     * Updates only the role of a user.
+     *
+     * @param userId user ID
+     * @param role new role
+     * @throws AppException if userId is null
+     */
+    void updateUser(User user);
 }

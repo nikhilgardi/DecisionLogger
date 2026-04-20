@@ -1,5 +1,6 @@
 package com.nikhitech.decisionlogger.dao;
 
+import com.nikhitech.decisionlogger.model.Role;
 import com.nikhitech.decisionlogger.model.User;
 
 import java.util.List;
@@ -147,7 +148,21 @@ public interface UserDao {
 	 * 
 	 * @param userId ID of the user
 	 */
-	void deactivate(Long userId);
+	int deactivate(Long userId);
+	
+	/**
+	 * Activates a user.
+	 * 
+	 * @param userId ID of the user
+	 */
+	int activate(Long userId) ;
+	
+	/**
+	 * Status of user(Activate/Deactivate)
+	 * 
+	 * @param userId ID of the user
+	 */
+	public boolean getStatus(Long userId);
 
 
 	/**
@@ -166,10 +181,30 @@ public interface UserDao {
 	void save(User user);
 	
 	/**
+	 * Updates only the role of a user in the database.
+	 *
+	 * @param userId user ID
+	 * @param role new role to assign
+	 */
+	void updateUser(User user);
+	
+	/**
 	 * Checks whether a user exists in the database for the given email address.
 	 *
 	 * @param email email address to check
 	 * @return true if a user with the given email exists, false otherwise
 	 */
 	boolean existsByEmail(String email);
+	
+	
+	
+	
+	
+	/**
+	 * Retrieves role ID from database using role name.
+	 *
+	 * @param roleName name of the role
+	 * @return role ID
+	 */
+	Long getRoleIdByName(String roleName);
 }

@@ -1,5 +1,7 @@
 package com.nikhitech.decisionlogger.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -142,13 +145,21 @@ public class AdminController {
 	 * @return Redirects to admin dashboard
 	 */
 	@PostMapping("/deactivate")
-	public String deactivate(@RequestParam Long userId) {
+	public String deactivate(@RequestParam Long userId,
+	                         RedirectAttributes redirectAttributes) {
 
-	    // Delegate to service layer
-	    userService.deactivateUser(userId);
+	    try {
 
-	    // Redirect to prevent duplicate submission
-	    return "redirect:/admin/dashboard";
+	        userService.deactivateUser(userId);
+
+	        redirectAttributes.addFlashAttribute("success", "User deactivated successfully");
+
+	    } catch (AppException ex) {
+
+	        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+	    }
+
+	    return "redirect:/admin/get-user";
 	}
 
 	// =========================
@@ -166,11 +177,29 @@ public class AdminController {
 
 		// Initialize an empty User object
 		// This is required for form binding in Thymeleaf (th:object)
+		List<User> users=userService.getUsersForAdmin();
 		model.addAttribute("user", new User());
+		model.addAttribute("users", users);
 
-		// Return the view name (create-user.html)
 		return "user_list";
 	}
+	
+	/**
+	 * Loads user data by ID and shows it on the create-user page for editing.
+	 *
+	 * @param id user ID
+	 * @param model holds user data for the view
+	 * @return create-user page
+	 */
+	@GetMapping("/edit-user/{id}")
+	public String editUser(@PathVariable Long id, Model model) {
+
+	    User user = userService.getUserById(id);
+	    model.addAttribute("user", user);
+
+	    return "create-user"; // SAME PAGE
+	}
+
 	
 	/**
 	 * Displays the user creation form.
@@ -209,6 +238,8 @@ public class AdminController {
 	        return "create-user"; // stay on form
 	    }
 	    try {
+	    	logger.info("user::{}",user);
+	    	
 	        userService.createUser(user);
 
 	        redirectAttributes.addFlashAttribute("success", "User created successfully");
@@ -224,4 +255,57 @@ public class AdminController {
 	    	 return "redirect:/admin/get-user";
 	    }
 	}
+	
+	/**
+	 * Handles updating a user's role.
+	 *
+	 * @param user user data from form
+	 * @param redirectAttributes used to pass success/error messages after redirect
+	 * @return redirects to user list page
+	 */
+	@PostMapping("/update-user")
+	public String updateUser(@ModelAttribute User user,
+	                         RedirectAttributes redirectAttributes) {
+
+	    try {
+	        userService.updateUser(user);
+	        redirectAttributes.addFlashAttribute("success", "User updated successfully");
+
+	    } catch (AppException ex) {
+	        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+	    }
+
+	    return "redirect:/admin/get-user";
+	}
+	
+	
+	/**
+	 * Deactivates/Activate a user.
+	 * 
+	 * @param userId ID of the user to deactivate/activate
+	 * @return Redirects to admin dashboard
+	 */
+	@PostMapping("/toggle-status")
+	public String toggleStatus(@RequestParam Long userId,
+	                           RedirectAttributes redirectAttributes) {
+
+	    try {
+
+	        boolean isActive = userService.toggleUserStatus(userId);
+
+	        if (isActive) {
+	            redirectAttributes.addFlashAttribute("success", "User activated successfully");
+	        } else {
+	            redirectAttributes.addFlashAttribute("success", "User deactivated successfully");
+	        }
+
+	    } catch (AppException ex) {
+
+	        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+	    }
+
+	    return "redirect:/admin/get-user";
+	}
+	
+	
 }

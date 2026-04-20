@@ -32,7 +32,7 @@
 
 					<thead>
 						<tr>
-							<th>ID</th>
+							<th>#</th>
 							<th>Name</th>
 							<th>Email</th>
 							<th>Role</th>
@@ -43,9 +43,9 @@
 
 					<tbody>
 
-						<tr th:each="user : ${users}">
+						<tr th:each="user,userStat : ${users}">
 
-							<td th:text="${user.id}"></td>
+							<td th:text="${userStat.count}"></td>
 							<td th:text="${user.fullName}"></td>
 							<td th:text="${user.email}"></td>
 							<td th:text="${user.role}"></td>
@@ -57,15 +57,22 @@
 
 							<!-- ACTIONS -->
 							<td>
-								<!-- EDIT --> <a
+								<!-- EDIT --> <a th:if="${user.active}"
 								th:href="@{/admin/edit-user/{id}(id=${user.id})}"
-								class="btn btn-warning btn-sm"> Edit </a> <!-- DEACTIVATE -->
-								<form th:action="@{/admin/deactivate}" method="post"
+								class="btn btn-warning btn-sm"> Edit </a> <!-- TOGGLE ACTIVE / INACTIVE -->
+								<form th:action="@{/admin/toggle-status}" method="post"
 									style="display: inline;">
+
 									<input type="hidden" name="userId" th:value="${user.id}" />
 
-									<button class="btn btn-danger btn-sm"
-										th:disabled="${!user.active}">Deactivate</button>
+									<!-- ACTIVE → SHOW DEACTIVATE -->
+									<button th:if="${user.active}" class="btn btn-danger btn-sm">
+										Deactivate</button>
+
+									<!-- INACTIVE → SHOW ACTIVATE -->
+									<button th:if="${!user.active}" class="btn btn-success btn-sm">
+										Activate</button>
+
 								</form>
 
 							</td>
@@ -73,6 +80,17 @@
 						</tr>
 
 					</tbody>
+
+					<tfoot>
+						<tr>
+							<th>#</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Role</th>
+							<th>Status</th>
+							<th width="180">Action</th>
+						</tr>
+					</tfoot>
 
 				</table>
 

@@ -102,9 +102,9 @@ public class User {
      * Plain text password should never be stored here.
      */
     @NotBlank(message = "Password is required", groups = {CreateUserGroup.class, LoginGroup.class})
-    @Size(min = 8, max = 12, message = "Password must be 8–12 characters", groups = CreateUserGroup.class)
+    @Size(min = 8, max = 16, message = "Password must be 8–16 characters", groups = CreateUserGroup.class)
     @Pattern(
-        regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,12}$",
+        regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,16}$",
         message = "Password must contain uppercase, number, and special character",
         groups = CreateUserGroup.class
     )
