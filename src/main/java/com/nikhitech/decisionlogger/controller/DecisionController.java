@@ -49,4 +49,23 @@ public class DecisionController {
 
         return "user-dashboard";
     }
+    
+    
+    /*
+     * ===============================================================
+     * USER DASHBOARD
+     * ===============================================================
+     */
+    @GetMapping("/get-user-decision")
+    public String getUserDecision(HttpSession session,
+                            Model model) {
+
+        User user =
+            (User) session.getAttribute("user");
+
+        model.addAttribute("decisions",
+                decisionService.getDecisionsForUser(user));
+
+        return "decision_list";
+    }
 }

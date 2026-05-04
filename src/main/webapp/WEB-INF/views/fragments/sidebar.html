@@ -34,7 +34,7 @@ ADMIN MENU
 
 					<li class="nav-item" th:if="${session.user.role.name() == 'USER'}">
 
-						<a th:href="@{/decision/dashboard}" class="nav-link"
+						<a th:href="@{/decision/get-user-decision}" class="nav-link"
 						th:classappend="${activeMenu == 'decision'} ? ' active'"> <i
 							class="nav-icon fas fa-list"></i>
 							<p>Decisions</p>
