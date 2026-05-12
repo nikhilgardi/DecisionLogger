@@ -47,15 +47,15 @@ public class DecisionController {
         model.addAttribute("decisions",
                 decisionService.getDecisionsForUser(user));
 
-        return "user-dashboard";
+        return "admin-dashboard";
     }
     
     
-    /*
-     * ===============================================================
-     * USER DASHBOARD
-     * ===============================================================
-     */
+   /*
+    * Displays the user decision list
+    * @param model Spring Model Object use to pass data to the view 
+    * @return Thymleaf template name for fetching list of decision take by the user
+    */
     @GetMapping("/get-user-decision")
     public String getUserDecision(HttpSession session,
                             Model model) {
@@ -67,5 +67,22 @@ public class DecisionController {
                 decisionService.getDecisionsForUser(user));
 
         return "decision_list";
+    }
+    
+    
+    /*
+     * Displays the decision form
+     * @param model Spring Model Object use to pass object to the view
+     * @return Thymleaf template name for submiting the decision of the user
+     */
+    @GetMapping("/user-decision-form")
+    public String showDecisionForm(Model model)
+    {
+    	if(!model.containsAttribute("decision"))
+    	{
+    		model.addAttribute("decision",new Decision());
+    	}
+    	
+    	return "user-decision-form";
     }
 }

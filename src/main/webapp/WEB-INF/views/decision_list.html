@@ -1,70 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymleaf.org"
+<html xmlns:th="http:www.thymleaf.org"
 	th:replace="layout::layout(~{::body})">
 <body>
 	<div th:fragment="content">
-		<!-- SUCCESS -->
+		<!-- Success -->
 		<div class="alert alert-success" th:if="${success}"
 			th:text="${success}"></div>
-
-		<!-- ERROR -->
+		<!-- Error -->
 		<div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
-		<div class="card">
 
-			<!-- HEADER -->
-			<!-- HEADER -->
+		<!-- Card -->
+		<div class="card">
+		<!-- Header -->
 			<div class="card-header container-fluid">
 				<div class="row">
 					<div class="col-md-10">
-						<h3 class="w-75 p-3">User List</h3>
+						<h3 class="w-75 p-3">Decision List</h3>
 					</div>
 					<div class="col-md-2 float-right">
-						<a th:href="@{/admin/create-decision}" class="btn btn-primary"> +
-							Create User </a>
-
+						<a th:href="@{/decision/user-decision-form}" class="btn btn-primary">Create
+							Decision</a>
 					</div>
 				</div>
 			</div>
-			<!-- BODY -->
-			<div class="card-body">
-
-				<table class="table table-striped mt-3" id="decisionTable">
-
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Title</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-
-					<tbody>
-
-						<tr th:each="decision : ${decisions}">
-							<td th:text="${decision.id}"></td>
-							<td th:text="${decision.title}"></td>
-							<td th:text="${decision.status}"></td>
-						</tr>
-
-					</tbody>
-
-				</table>
-
-			</div>
+			
+		<!-- Body -->
+		<div class="card-body">
+			<table class="table" id="decisionTable">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Title</th>
+						<th>Context</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="decision,decStat:${decisions}">
+						<td th:text="${decStat.count}"></td>
+						<td th:text="${decision.title}"></td>
+						<td th:text="${decision.context}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
 		</div>
 
 	</div>
-
-
+	
 	<!-- DATATABLE SCRIPT -->
 	<script>
 		$(function() {
 
-			$('#userTable').DataTable({
+			$('#decisionTable').DataTable({
 				pageLength : 5,
 				language : {
-					emptyTable : "No users found"
+					emptyTable : "No record found"
 				}
 			});
 

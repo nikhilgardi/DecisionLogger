@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="htt://www.thymleaf.org"
+	th:replace="layout::layout(~{::body})">
+<body>
+	<div th:fragment="content">
+		<!-- Card -->
+		<div class="card">
+
+			<!-- Header -->
+			<div class="card-header">
+				<h3
+					th:text="${decision.id}!=null ? 'Edit Decision' : 'Take Decision'"></h3>
+			</div>
+			<div class="card-body">
+
+				<form method="post"
+					th:action="${decision.id}!=null ? @{/decision/update-decision} : @{/decision/create-decision}"
+					th:object="${decision}">
+
+					<input type="hidden" th:field="*{id}" th:if="${decision.id}">
+
+
+					<div class="mb-3">
+						<label>Title</label> <input type="text" placeholder="Enter Title"
+							th:field="*{title}" class="form-control" maxlength="200" />
+					</div>
+
+					<div class="mb-3">
+						<label>Context</label>
+						<textarea rows="4" placeholder="Enter Context"
+							th:field="*{context}" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label>Expected Outcome</label>
+						<textarea row="4" placeholder="Enter Expected Outcome"
+							th:field="*{expectedOutcome}" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label>Actual Outcome</label>
+						<textarea row="4" placeholder="Enter Actual Outcome"
+							th:field="*{actualOutcome}" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label>Risk Level</label> <select th:field="*{riskLevel}"
+							class="form-control">
+							<option value="">Select Risk Level</option>
+							<option value="LOW">LOW</option>
+							<option value="MEDIUM">MEDIUM</option>
+							<option value="HIGH">HIGH</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label>Status</label> <select th:field="*{status}"
+							class="form-control">
+							<option value="PENDING">Pending</option>
+							<option value="COMPLETED">Completed</option>
+							<option value="INPROGRES">In Progress</option>
+							<option value="FAILED">Failed</option>
+							<option value="DROPPED">Dropped</option>
+						</select>
+					</div>
+
+					<div class="md-3">
+						<label>Reflection Notes</label>
+						<textarea th:field="*{reflectionNotes}" row="4"
+							placeholder="Enter Reflection Notes" class="form-control" />
+					</div>
+
+
+					<div class="md-3">
+						<label>Decision Date</label> <input type="date"
+							class="form-control" th:field="*{decisionDate}" />
+					</div>
+
+					<div class="md-3 mt-4 text-center">
+
+						<button class="btn btn-success"
+							th:text="${decision.id}!=null ? 'Update' : 'Take Decision'"></button>
+					</div>
+				</form>
+
+			</div>
+
+
+		</div>
+
+	</div>
+
+</body>
+</html>

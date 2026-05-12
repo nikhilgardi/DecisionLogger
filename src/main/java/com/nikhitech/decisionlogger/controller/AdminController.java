@@ -170,7 +170,7 @@ public class AdminController {
 	 * Displays the user creation form.
 	 * 
 	 * @param model Spring Model object used to pass data to the view
-	 * @return Thymeleaf template name for creating a user
+	 * @return Thymeleaf template name for fetching list of users
 	 */
 	@GetMapping("/get-user")
 	public String displayUserList(Model model) {
@@ -204,7 +204,7 @@ public class AdminController {
 	/**
 	 * Displays the user creation form.
 	 * 
-	 * @param model Spring Model object used to pass data to the view
+	 * @param model Spring Model object used to pass object to the view
 	 * @return Thymeleaf template name for creating a user
 	 */
 	@GetMapping("/create-user")
